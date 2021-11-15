@@ -1,1 +1,1 @@
-# fuse
+# Fuse demo projects
