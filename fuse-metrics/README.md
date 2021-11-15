@@ -1,3 +1,11 @@
+# Spring boot
+
+## Build
+mvn clean install -s configuration/settings.xml
+
+## Run
+mvn spring-boot:run -s configuration/settings.xml
+
 
 
 # Kubernetes
@@ -11,6 +19,10 @@ mvn k8s:push -Pkubernetes -s configuration/settings.xml
 ## Deploy
 mvn k8s:deploy -Pkubernetes -s configuration/settings.xml
 
+## Undeploy
+mvn k8s:undeploy -Pkubernetes -s configuration/settings.xml
+
+
 
 # Openshift
 
@@ -19,3 +31,7 @@ mvn clean install -Popenshift -s configuration/settings.xml
 
 ## Deploy
 mvn oc:deploy -Popenshift -s configuration/settings.xml
+
+
+## Undeploy
+mvn oc:undeploy -Popenshift -s configuration/settings.xml

@@ -1,0 +1,115 @@
+---
+apiVersion: v1
+kind: List
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      prometheus.io/path: /metrics
+      jkube.io/git-branch: main
+      prometheus.io/port: "9779"
+      prometheus.io/scrape: "true"
+      jkube.io/git-url: git@github.com:mronconis/fuse.git
+      jkube.io/git-commit: 32c3abdf0a5f1a3d6b955f61aa425a358585590d
+    labels:
+      expose: "true"
+      app: fuse-metrics
+      provider: jkube
+      version: 1.2-SNAPSHOT
+      group: com.redhat.fuse.demo
+    name: fuse-metrics
+  spec:
+    ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: fuse-metrics
+      provider: jkube
+      group: com.redhat.fuse.demo
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      jkube.io/git-url: git@github.com:mronconis/fuse.git
+      jkube.io/git-commit: 32c3abdf0a5f1a3d6b955f61aa425a358585590d
+      jkube.io/git-branch: main
+    labels:
+      app: fuse-metrics
+      provider: jkube
+      version: 1.2-SNAPSHOT
+      group: com.redhat.fuse.demo
+    name: fuse-metrics
+  spec:
+    replicas: 1
+    revisionHistoryLimit: 2
+    selector:
+      matchLabels:
+        app: fuse-metrics
+        provider: jkube
+        group: com.redhat.fuse.demo
+    template:
+      metadata:
+        annotations:
+          jkube.io/git-url: git@github.com:mronconis/fuse.git
+          jkube.io/git-commit: 32c3abdf0a5f1a3d6b955f61aa425a358585590d
+          jkube.io/git-branch: main
+        labels:
+          app: fuse-metrics
+          provider: jkube
+          version: 1.2-SNAPSHOT
+          group: com.redhat.fuse.demo
+      spec:
+        containers:
+        - env:
+          - name: SPRING_APPLICATION_JSON
+            value: "{\"server\":{\"undertow\":{\"io-threads\":1, \"worker-threads\"\
+              :2 }}}"
+          - name: KUBERNETES_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: HOSTNAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+          image: quay.io/mronconi/fuse-metrics:1.2-SNAPSHOT
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /actuator/health
+              port: 8081
+              scheme: HTTP
+            initialDelaySeconds: 180
+            successThreshold: 1
+          name: spring-boot
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 9779
+            name: prometheus
+            protocol: TCP
+          - containerPort: 8778
+            name: jolokia
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /actuator/health
+              port: 8081
+              scheme: HTTP
+            initialDelaySeconds: 10
+            successThreshold: 1
+          resources:
+            limits:
+              cpu: "1.0"
+              memory: 256Mi
+            requests:
+              cpu: "0.2"
+              memory: 256Mi
+          securityContext:
+            privileged: false
