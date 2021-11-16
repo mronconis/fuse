@@ -29,7 +29,7 @@ public class Config {
     }
 
     /**
-     * Set the Camel Context to use the MicrometerRouterPolicyFactory and MicrometerMessageHistoryFactory.
+     * Set the Camel Context to use the MicrometerRouterPolicyFactory, MicrometerMessageHistoryFactory and MetricsRoutePolicyFactory.
      * 
      * Here are the metrics made available to Prometheus:
      * - CamelMessageHistory_seconds_count

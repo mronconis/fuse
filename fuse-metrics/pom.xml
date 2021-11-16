@@ -211,6 +211,7 @@
                 <jkube.generator.name>mronconi/${project.artifactId}:${project.version}</jkube.generator.name>
                 <jkube.generator.registry>quay.io</jkube.generator.registry>
                 <jkube.docker.registry>quay.io</jkube.docker.registry>
+                <jkube.build.pullSecret>mronconi-registry-secret</jkube.build.pullSecret>
             </properties>
             <build>
                 <plugins>
