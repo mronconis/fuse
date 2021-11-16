@@ -15,7 +15,6 @@
  */
 package com.redhat.fuse.demo;
 
-import org.apache.camel.builder.RouteBuilder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ImportResource;
@@ -25,21 +24,8 @@ import org.springframework.context.annotation.ImportResource;
  */
 @SpringBootApplication
 @ImportResource({"classpath:spring/camel-context.xml"})
-public class Application extends RouteBuilder {
-
-    // must have a main method spring-boot can run
+public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
-    }
-
-    @Override
-    public void configure() throws Exception {
-
-        rest()
-            .get("/demo/{client-id}")
-            .to("direct:main");
-
-        from("direct:main")
-            .log("got request from client: ${header.client-id}");
     }
 }

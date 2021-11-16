@@ -15,4 +15,11 @@
         </route>
     </camelContext>
     -->
+
+    <bean class="org.apache.camel.component.metrics.routepolicy.MetricsRoutePolicy"
+        id="policy">
+        <property name="useJmx" value="true"/>
+        <property name="jmxDomain" value="fuse.metrics"/>
+    </bean>
+
 </beans>
