@@ -13,3 +13,5 @@ spec:
           env:
           - name: SPRING_APPLICATION_JSON
             value: '{"server":{"undertow":{"io-threads":1, "worker-threads":2 }}}'
+      imagePullSecrets:
+      - name: pullsecret-jkube
