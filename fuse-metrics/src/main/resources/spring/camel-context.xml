@@ -5,21 +5,11 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://camel.apache.org/schema/spring       http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-    <!-- You could also define a traditional camel context here -->
-    <!--
-    <camelContext xmlns="http://camel.apache.org/schema/spring">
-        <route>
-            <from uri="timer://foo?period=1000"/>
-            <setBody><simple>Hello World from camel-contex.xml</simple></setBody>
-            <log message=">>> ${body}"/>
-        </route>
-    </camelContext>
-    -->
 
-    <bean class="org.apache.camel.component.metrics.routepolicy.MetricsRoutePolicy"
+    <!--bean class="org.apache.camel.component.metrics.routepolicy.MetricsRoutePolicy"
         id="policy">
         <property name="useJmx" value="true"/>
         <property name="jmxDomain" value="fuse.metrics"/>
-    </bean>
+    </bean-->
 
 </beans>
