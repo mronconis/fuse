@@ -185,6 +185,12 @@
     <profiles>
         <profile>
             <id>openshift</id>
+            <properties>
+                <jkube.namespace>fuse-metrics</jkube.namespace>
+                <image.pull.secret>default-dockercfg-vtpbj</image.pull.secret>
+                <jkube.replicas>2</jkube.replicas>
+                <jkube.enricher.jkube-service.type>LoadBalancer</jkube.enricher.jkube-service.type>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -211,7 +217,8 @@
                 <jkube.generator.name>mronconi/${project.artifactId}:${project.version}</jkube.generator.name>
                 <jkube.generator.registry>quay.io</jkube.generator.registry>
                 <jkube.docker.registry>quay.io</jkube.docker.registry>
-                <jkube.build.pullSecret>mronconi-registry-secret</jkube.build.pullSecret>
+                <jkube.namespace>fuse-metrics</jkube.namespace>
+                <image.pull.secret>pullsecret-jkube</image.pull.secret>
             </properties>
             <build>
                 <plugins>

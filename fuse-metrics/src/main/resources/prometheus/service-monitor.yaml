@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  labels:
+    k8s-app: fuse-metrics-monitor
+  name: fuse-metrics-monitor
+  namespace: fuse-metrics
+spec:
+  endpoints:
+  - interval: 30s
+    port: http-mngt
+    path: /actuator/prometheus
+    scheme: http
+  selector:
+    matchLabels:
+      app: fuse-metrics

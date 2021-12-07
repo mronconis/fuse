@@ -140,3 +140,17 @@ Output
 simple_counter_total{appName="fuse-metrics",camelContext="fuse-metrics",} 2.0
 ...
 ```
+
+## Enable service monitor
+
+```
+oc apply -f src/main/resources/prometheus/service-monitor.yaml
+```
+
+## Review the target status for your project
+
+```
+oc port-forward -n openshift-user-workload-monitoring pod/prometheus-user-workload-0 9090
+```
+
+Open http://localhost:9090/targets in a web browser and review the status of the target for your project directly in the Prometheus UI. Check for error messages relating to the target.

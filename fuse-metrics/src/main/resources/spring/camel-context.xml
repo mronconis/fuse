@@ -4,12 +4,12 @@
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://camel.apache.org/schema/spring       http://camel.apache.org/schema/spring/camel-spring.xsd">
-
-
-    <!--bean class="org.apache.camel.component.metrics.routepolicy.MetricsRoutePolicy"
+       
+       
+       <bean class="org.apache.camel.component.metrics.routepolicy.MetricsRoutePolicy"
         id="policy">
-        <property name="useJmx" value="true"/>
-        <property name="jmxDomain" value="fuse.metrics"/>
-    </bean-->
+              <property name="useJmx" value="true"/>
+              <property name="jmxDomain" value="fis.metrics"/>
+       </bean>
 
 </beans>

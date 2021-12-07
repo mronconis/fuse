@@ -3,13 +3,13 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>fuse</groupId>
+    <groupId>com.redhat.fuse.demo</groupId>
     <artifactId>fuse-parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <name>Fuse example</name>
-    <description>Fuse projects example</description>
+    <name>Fuse demo projects</name>
+    <description>Fuse demo projects</description>
 
     <modules>
     	<module>fuse-metrics</module>
