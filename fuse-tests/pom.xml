@@ -4,18 +4,23 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.redhat.fuse.demo</groupId>
         <artifactId>fuse-parent</artifactId>
+        <groupId>com.redhat.fuse.demo</groupId>
         <version>1.2-SNAPSHOT</version>
     </parent>
 
     <groupId>com.redhat.fuse.demo</groupId>
-    <artifactId>fuse-metrics</artifactId>
+    <artifactId>fuse-tests</artifactId>
 
-    <name>JKube :: Demo :: Spring-Boot :: Camel :: Metrics</name>
-    <description>Spring Boot example running a Camel route metrics</description>
+    <name>JKube :: Demo :: Spring-Boot :: Camel :: Tests</name>
+    <description>Spring Boot example running a Camel route tests</description>
 
     <dependencies>
+        <!-- Enabling health checks -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -30,83 +35,21 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-undertow</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-spring-boot-starter</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-servlet-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-jackson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-xstream</artifactId>
-        </dependency>
 
-        <!-- custom defined -->
-        <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.3.0</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-
-        <!-- metrics -->
+        <!-- testing-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
-            <artifactId>camel-metrics-starter</artifactId>
-        </dependency>
-        <dependency>     
-            <groupId>org.apache.camel</groupId>     
-            <artifactId>camel-micrometer-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-prometheus</artifactId>
-        </dependency>
-
-        <!-- testing -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.arquillian.junit</groupId>
-            <artifactId>arquillian-junit-container</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.arquillian.cube</groupId>
-            <artifactId>arquillian-cube-openshift</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpclient-osgi</artifactId>
-                </exclusion>
-            </exclusions>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.fabric8</groupId>
-            <artifactId>kubernetes-model</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.fabric8</groupId>
-            <artifactId>kubernetes-client</artifactId>
+            <artifactId>camel-test-spring</artifactId>
             <scope>test</scope>
         </dependency>
 
@@ -114,6 +57,7 @@
 
     <build>
         <defaultGoal>spring-boot:run</defaultGoal>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -130,11 +74,7 @@
                 <version>${maven-surefire-plugin.version}</version>
                 <inherited>true</inherited>
                 <configuration>
-                    <rerunFailingTestsCount>15</rerunFailingTestsCount>
                     <argLine>-DenableImageStreamDetection=true</argLine>
-                    <excludes>
-                        <exclude>**/*KT.java</exclude>
-                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -149,8 +89,9 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
-        <pluginManagement />
+
     </build>
 
     <profiles>
@@ -188,13 +129,12 @@
                                         </assembly>
                                         <ports>
                                             <port>8080</port>
-                                            <port>8081</port>
                                         </ports>
                                     </build>
                                 </image>
                             </images>
                             <resources>
-                                <replicas>2</replicas>
+                                <replicas>1</replicas>
                                 <controllerName>${project.artifactId}</controllerName>
                                 <services>
                                     <service>
@@ -205,11 +145,6 @@
                                                 <name>http</name>
                                                 <port>8080</port>
                                                 <targetPort>8080</targetPort>
-                                            </port>
-                                            <port>
-                                                <name>http-mngt</name>
-                                                <port>8081</port>
-                                                <targetPort>8081</targetPort>
                                             </port>
                                         </ports>
                                     </service>
@@ -255,13 +190,12 @@
                                         </assembly>
                                         <ports>
                                             <port>8080</port>
-                                            <port>8081</port>
                                         </ports>
                                     </build>
                                 </image>
                             </images>
                             <resources>
-                                <replicas>2</replicas>
+                                <replicas>1</replicas>
                                 <controllerName>${project.artifactId}</controllerName>
                                 <services>
                                     <service>
@@ -272,11 +206,6 @@
                                                 <name>http</name>
                                                 <port>8080</port>
                                                 <targetPort>8080</targetPort>
-                                            </port>
-                                            <port>
-                                                <name>http-mngt</name>
-                                                <port>8081</port>
-                                                <targetPort>8081</targetPort>
                                             </port>
                                         </ports>
                                     </service>

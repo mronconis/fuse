@@ -1,21 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
-        <groupId>com.redhat.fuse.demo</groupId>
         <artifactId>fuse-parent</artifactId>
+        <groupId>com.redhat.fuse.demo</groupId>
         <version>1.2-SNAPSHOT</version>
     </parent>
 
     <groupId>com.redhat.fuse.demo</groupId>
-    <artifactId>fuse-metrics</artifactId>
+    <artifactId>fuse-kafka-to-sql</artifactId>
 
-    <name>JKube :: Demo :: Spring-Boot :: Camel :: Metrics</name>
-    <description>Spring Boot example running a Camel route metrics</description>
+    <name>JKube :: Demo :: Spring-Boot :: Camel :: Kafka</name>
+    <description>Spring Boot example running a Camel route kafka to sql</description>
 
     <dependencies>
+
+        <!-- Enabling health checks -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -30,40 +36,28 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-undertow</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-spring-boot-starter</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apache.camel</groupId>
-            <artifactId>camel-servlet-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-jackson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-xstream</artifactId>
+            <artifactId>camel-kafka-starter</artifactId>
         </dependency>
 
-        <!-- custom defined -->
         <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.3.0</version>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-sql-starter</artifactId>
         </dependency>
+
         <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>1.1.1</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>
 
         <!-- metrics -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-metrics-starter</artifactId>
@@ -79,34 +73,55 @@
 
         <!-- testing -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
-            <groupId>org.jboss.arquillian.junit</groupId>
-            <artifactId>arquillian-junit-container</artifactId>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-test-spring</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
-            <groupId>org.arquillian.cube</groupId>
-            <artifactId>arquillian-cube-openshift</artifactId>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka-test</artifactId>
+            <scope>test</scope>
             <exclusions>
                 <exclusion>
-                    <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpclient-osgi</artifactId>
+                    <groupId>org.apache.kafka</groupId>
+                    <artifactId>kafka_2.12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.scala-lang</groupId>
+                    <artifactId>scala-library</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>12.4.2.jre8</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>kafka</artifactId>
+            <version>1.19.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>io.fabric8</groupId>
-            <artifactId>kubernetes-model</artifactId>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>mssqlserver</artifactId>
+            <version>1.19.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>io.fabric8</groupId>
-            <artifactId>kubernetes-client</artifactId>
+            <groupId>org.mock-server</groupId>
+            <artifactId>mockserver-junit-rule</artifactId>
+            <version>5.11.1</version>
             <scope>test</scope>
         </dependency>
 
@@ -114,6 +129,7 @@
 
     <build>
         <defaultGoal>spring-boot:run</defaultGoal>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -124,19 +140,7 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-                <inherited>true</inherited>
-                <configuration>
-                    <rerunFailingTestsCount>15</rerunFailingTestsCount>
-                    <argLine>-DenableImageStreamDetection=true</argLine>
-                    <excludes>
-                        <exclude>**/*KT.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
+
             <plugin>
                 <groupId>org.jboss.redhat-fuse</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -149,8 +153,9 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
-        <pluginManagement />
+
     </build>
 
     <profiles>
@@ -188,13 +193,12 @@
                                         </assembly>
                                         <ports>
                                             <port>8080</port>
-                                            <port>8081</port>
                                         </ports>
                                     </build>
                                 </image>
                             </images>
                             <resources>
-                                <replicas>2</replicas>
+                                <replicas>1</replicas>
                                 <controllerName>${project.artifactId}</controllerName>
                                 <services>
                                     <service>
@@ -206,11 +210,6 @@
                                                 <port>8080</port>
                                                 <targetPort>8080</targetPort>
                                             </port>
-                                            <port>
-                                                <name>http-mngt</name>
-                                                <port>8081</port>
-                                                <targetPort>8081</targetPort>
-                                            </port>
                                         </ports>
                                     </service>
                                 </services>
@@ -220,7 +219,7 @@
                 </plugins>
             </build>
         </profile>
-        
+
         <profile>
             <id>kubernetes</id>
             <properties>
@@ -255,13 +254,12 @@
                                         </assembly>
                                         <ports>
                                             <port>8080</port>
-                                            <port>8081</port>
                                         </ports>
                                     </build>
                                 </image>
                             </images>
                             <resources>
-                                <replicas>2</replicas>
+                                <replicas>1</replicas>
                                 <controllerName>${project.artifactId}</controllerName>
                                 <services>
                                     <service>
@@ -273,21 +271,15 @@
                                                 <port>8080</port>
                                                 <targetPort>8080</targetPort>
                                             </port>
-                                            <port>
-                                                <name>http-mngt</name>
-                                                <port>8081</port>
-                                                <targetPort>8081</targetPort>
-                                            </port>
                                         </ports>
                                     </service>
                                 </services>
                             </resources>
                         </configuration>
-                    </plugin>   
+                    </plugin>
                 </plugins>
             </build>
         </profile>
 
     </profiles>
-
 </project>
