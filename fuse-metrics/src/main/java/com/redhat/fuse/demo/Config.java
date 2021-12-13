@@ -45,6 +45,7 @@ public class Config {
         return new CamelContextConfiguration() {
             @Override
             public void beforeApplicationStart(CamelContext camelContext) {
+                // This factory allows to add a RoutePolicy for each route which exposes route utilization statistics using codehale metrics.
                 camelContext.addRoutePolicyFactory(new MetricsRoutePolicyFactory());
                 camelContext.addRoutePolicyFactory(new MicrometerRoutePolicyFactory());
                 camelContext.setMessageHistoryFactory(new MicrometerMessageHistoryFactory());

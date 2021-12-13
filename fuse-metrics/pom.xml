@@ -12,8 +12,8 @@
     <groupId>com.redhat.fuse.demo</groupId>
     <artifactId>fuse-metrics</artifactId>
 
-    <name>Fuse metrics demo</name>
-    <description>Fuse metrics demo</description>
+    <name>JKube :: Demo :: Spring-Boot :: Camel :: Metrics</name>
+    <description>Spring Boot example running a Camel route metrics</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -139,7 +139,6 @@
 
     <build>
         <defaultGoal>spring-boot:run</defaultGoal>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -163,7 +162,6 @@
                     </excludes>
                 </configuration>
             </plugin>
-
             <plugin>
                 <groupId>org.jboss.redhat-fuse</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -176,27 +174,25 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
-
         <pluginManagement />
     </build>
 
     <profiles>
+
         <profile>
             <id>openshift</id>
             <properties>
-                <jkube.namespace>fuse-metrics</jkube.namespace>
-                <image.pull.secret>default-dockercfg-vtpbj</image.pull.secret>
-                <jkube.replicas>2</jkube.replicas>
-                <jkube.enricher.jkube-service.type>LoadBalancer</jkube.enricher.jkube-service.type>
+                <jkube.namespace>fuse-demos</jkube.namespace>
+                <image.pull.secret>default-dockercfg-r486j</image.pull.secret>
+                <jkube.createExternalUrls>true</jkube.createExternalUrls>
             </properties>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.eclipse.jkube</groupId>
                         <artifactId>openshift-maven-plugin</artifactId>
-                        <version>1.4.0</version>
+                        <version>1.5.1</version>
                         <executions>
                             <execution>
                                 <goals>
@@ -206,6 +202,45 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <images>
+                                <image>
+                                    <name>${project.artifactId}:${project.version}</name>
+                                    <build>
+                                        <from>registry.redhat.io/fuse7/fuse-java-openshift:1.8</from>
+                                        <assembly>
+                                            <targetDir>/deployments</targetDir>
+                                        </assembly>
+                                        <ports>
+                                            <port>8080</port>
+                                            <port>8081</port>
+                                        </ports>
+                                    </build>
+                                </image>
+                            </images>
+                            <resources>
+                                <replicas>2</replicas>
+                                <controllerName>${project.artifactId}</controllerName>
+                                <services>
+                                    <service>
+                                        <name>${project.artifactId}</name>
+                                        <type>LoadBalancer</type>
+                                        <ports>
+                                            <port>
+                                                <name>http</name>
+                                                <port>8080</port>
+                                                <targetPort>8080</targetPort>
+                                            </port>
+                                            <port>
+                                                <name>http-mngt</name>
+                                                <port>8081</port>
+                                                <targetPort>8081</targetPort>
+                                            </port>
+                                        </ports>
+                                    </service>
+                                </services>
+                            </resources>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
@@ -214,10 +249,8 @@
         <profile>
             <id>kubernetes</id>
             <properties>
-                <jkube.generator.name>mronconi/${project.artifactId}:${project.version}</jkube.generator.name>
-                <jkube.generator.registry>quay.io</jkube.generator.registry>
                 <jkube.docker.registry>quay.io</jkube.docker.registry>
-                <jkube.namespace>fuse-metrics</jkube.namespace>
+                <jkube.namespace>fuse-demos</jkube.namespace>
                 <image.pull.secret>pullsecret-jkube</image.pull.secret>
             </properties>
             <build>
@@ -235,9 +268,51 @@
                                 </goals>
                             </execution>
                         </executions>
+                        <configuration>
+                            <registry>quay.io</registry>
+                            <images>
+                                <image>
+                                    <name>mronconi/${project.artifactId}:${project.version}</name>
+                                    <build>
+                                        <from>registry.redhat.io/fuse7/fuse-java-openshift:1.8</from>
+                                        <assembly>
+                                            <targetDir>/deployments</targetDir>
+                                        </assembly>
+                                        <ports>
+                                            <port>8080</port>
+                                            <port>8081</port>
+                                        </ports>
+                                    </build>
+                                </image>
+                            </images>
+                            <resources>
+                                <replicas>2</replicas>
+                                <controllerName>${project.artifactId}</controllerName>
+                                <services>
+                                    <service>
+                                        <name>${project.artifactId}</name>
+                                        <type>LoadBalancer</type>
+                                        <ports>
+                                            <port>
+                                                <name>http</name>
+                                                <port>8080</port>
+                                                <targetPort>8080</targetPort>
+                                            </port>
+                                            <port>
+                                                <name>http-mngt</name>
+                                                <port>8081</port>
+                                                <targetPort>8081</targetPort>
+                                            </port>
+                                        </ports>
+                                    </service>
+                                </services>
+                            </resources>
+                        </configuration>
                     </plugin>   
                 </plugins>
             </build>
         </profile>
+
     </profiles>
+
 </project>

@@ -19,6 +19,28 @@ Maven users will need to add the following dependency to their pom.xml:
     </dependency>
 ```
 
+## Enable metrics through Java DSL
+
+This factory allows to add a RoutePolicy for each route which exposes route utilization statistics using codehale metrics.
+
+```
+camelContext.addRoutePolicyFactory(new MetricsRoutePolicyFactory());
+```
+
+In addition is possible enable micrometer component for allows to collect various metrics directly from Camel routes:
+```
+camelContext.addRoutePolicyFactory(new MicrometerRoutePolicyFactory());
+camelContext.setMessageHistoryFactory(new MicrometerMessageHistoryFactory());
+```
+
+Sample metric on a camel route:
+```
+from("direct:main")
+   .routeId("dummy")
+   .to("micrometer:counter:simple.counter?increment=1")
+```
+
+
 # Spring boot
 
 ## Build
@@ -30,6 +52,7 @@ mvn clean install -s configuration/settings.xml
 ```
 mvn spring-boot:run -s configuration/settings.xml
 ```
+
 
 # Kubernetes
 
@@ -70,6 +93,7 @@ mvn oc:deploy -Popenshift -s configuration/settings.xml
 ```
 mvn oc:undeploy -Popenshift -s configuration/settings.xml
 ```
+
 
 # Test
 
@@ -123,6 +147,7 @@ Output
    ]
 }
 ```
+
 
 # Prometheus
 

@@ -1,3 +1,4 @@
+---
 spec:
   template:
     spec:
@@ -13,5 +14,7 @@ spec:
           env:
           - name: SPRING_APPLICATION_JSON
             value: '{"server":{"undertow":{"io-threads":1, "worker-threads":2 }}}'
+          - name: LOG4J_FORMAT_MSG_NO_LOOKUPS
+            value: 'true'
       imagePullSecrets:
       - name: ${image.pull.secret}

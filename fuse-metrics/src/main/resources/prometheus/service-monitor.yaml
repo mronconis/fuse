@@ -4,7 +4,7 @@ metadata:
   labels:
     k8s-app: fuse-metrics-monitor
   name: fuse-metrics-monitor
-  namespace: fuse-metrics
+  namespace: fuse-demos
 spec:
   endpoints:
   - interval: 30s

@@ -1,6 +1,7 @@
 package com.redhat.fuse.demo;
 
 import org.apache.camel.builder.RouteBuilder;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.stereotype.Component;
 
 /**
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
  * 
  */
 @Component
+@ImportResource({"classpath:spring/camel-context.xml"})
 public class Router extends RouteBuilder {
     @Override
     public void configure() throws Exception {
